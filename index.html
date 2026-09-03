@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="نرخ‌یار، داشبورد مدرن نرخ ارز و فلزات گران‌بها">
+<title>نرخ‌یار | بازارهای مالی</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#f5f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#718096;--border:#e5eaf2;--primary:#2563eb;--up:#10b981;--down:#ef4444;--shadow:0 12px 35px rgba(15,23,42,.08)}
+[data-theme=dark]{--bg:#08111f;--surface:#0f1b2d;--surface2:#132238;--text:#eef4ff;--muted:#94a3b8;--border:#21314a;--shadow:0 15px 40px rgba(0,0,0,.28)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Tahoma,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;transition:.25s}.container{width:min(1180px,calc(100% - 28px));margin:auto}
+header{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--border);opacity:.96}.nav{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{display:flex;align-items:center;gap:10px;font-weight:900}.logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:grid;place-items:center;color:#fff;font-size:20px}.controls{display:flex;gap:8px}.control,select,input{font:inherit}.control{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:11px;padding:8px 12px;cursor:pointer}
+.hero{padding:45px 0 25px;display:grid;grid-template-columns:1.4fr .8fr;gap:24px;align-items:center}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.15}h1 span{color:var(--primary)}.hero p{color:var(--muted);margin-top:12px}.statusbox,.card,.tool{background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:18px}.statusbox{padding:20px}.statusrow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}.statusrow:last-child{border:0}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--up);margin-left:6px}
+section{padding:20px 0}.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:15px}.section-title span{color:var(--muted);font-size:.83rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.card{padding:18px;transition:.2s}.card:hover{transform:translateY(-3px)}.cardtop{display:flex;justify-content:space-between;gap:10px}.name{font-weight:800}.symbol{display:block;color:var(--muted);font-size:.75rem}.badge{font-size:.7rem;background:var(--surface2);padding:3px 8px;border-radius:8px;color:var(--muted)}.price{font-size:1.65rem;font-weight:900;margin-top:10px}.change{font-size:.84rem;font-weight:700}.up{color:var(--up)}.down{color:var(--down)}.chartwrap{height:125px;margin-top:10px}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}.tool{padding:20px}.tool h3{margin-bottom:13px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.input,.select{width:100%;border:1px solid var(--border);background:var(--surface2);color:var(--text);padding:10px;border-radius:10px}.result{grid-column:1/-1;padding:12px;border-radius:11px;background:var(--surface2);font-weight:800;text-align:center}
+footer{margin-top:35px;border-top:1px solid var(--border);padding:32px 0 24px;color:var(--muted)}.footergrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:25px}footer h3{color:var(--text);margin-bottom:7px}footer a{color:inherit;text-decoration:none;display:block;margin:3px 0}.note{text-align:center;font-size:.78rem;margin-top:20px}
+@media(max-width:750px){.hero{grid-template-columns:1fr}.footergrid{grid-template-columns:1fr}.nav{padding:10px 0;align-items:flex-start}.controls{flex-wrap:wrap;justify-content:flex-end}h1{font-size:2.15rem}}
+</style>
+</head>
+<body>
+<header><div class="container nav"><div class="brand"><div class="logo">₿</div><span>نرخ‌یار</span></div><div class="controls">
+<select id="language" class="control" aria-label="زبان"><option value="fa">فارسی</option><option value="en">English</option></select>
+<button class="control" id="themeBtn" onclick="toggleTheme()">🌙 حالت تاریک</button></div></div></header>
+
+<main class="container">
+<section class="hero"><div><h1>بازارها را <span>ساده‌تر</span> ببین.</h1><p>داشبورد مدرن برای پیگیری نرخ ارز، طلا و فلزات گران‌بها، همراه با نمودار تغییرات یک‌ماهه و ابزارهای تبدیل سریع.</p></div>
+<div class="statusbox"><div class="statusrow"><span>وضعیت سامانه</span><b><i class="dot"></i>فعال</b></div><div class="statusrow"><span>آخرین بروزرسانی</span><b id="lastUpdate">--:--:--</b></div><div class="statusrow"><span>دوره بروزرسانی</span><b>۵ ثانیه</b></div></div></section>
+
+<section><div class="section-title"><h2>نرخ‌های لحظه‌ای</h2><span>نمودار ۳۰ روزه برای هر مورد</span></div><div class="grid" id="marketGrid"></div></section>
+
+<section><div class="section-title"><h2>ابزارهای تبدیل</h2><span>ارز و فلزات گران‌بها</span></div><div class="tools">
+<div class="tool"><h3>مبدل ارزهای معروف</h3><div class="formgrid"><input id="fxAmount" class="input" type="number" value="1" min="0"><select id="fxFrom" class="select"></select><select id="fxTo" class="select"></select><div id="fxResult" class="result">--</div></div></div>
+<div class="tool"><h3>مبدل گرام فلزات گران‌بها</h3><div class="formgrid"><input id="metalAmount" class="input" type="number" value="1" min="0"><select id="metal" class="select"><option value="gold">طلا</option><option value="silver">نقره</option></select><select id="metalCurrency" class="select"></select><div id="metalResult" class="result">--</div></div></div>
+</div></section>
+
+<section><div class="section-title"><h2>درباره وبسایت</h2></div><div class="tool"><p>نرخ‌یار یک داشبورد ساده و مدرن برای مشاهده نرخ ارز و فلزات گران‌بها و تبدیل سریع واحدهاست. نمودار هر دارایی روند ۳۰ روز گذشته را به‌صورت بصری نشان می‌دهد. اعداد فعلی در این فایل نمونه هستند و برای نرخ زنده باید API معتبر بازار به بخش دریافت داده متصل شود.</p></div></section>
+</main>
+
+<footer><div class="container footergrid"><div><h3>نرخ‌یار</h3><p>مرجع ساده و مدرن برای مشاهده نرخ ارز و فلزات گران‌بها.</p></div><div><h3>دسترسی سریع</h3><a href="#marketGrid">نرخ‌ها</a><a href="#fxAmount">مبدل ارز</a><a href="#metalAmount">فلزات گران‌بها</a></div><div><h3>اطلاعات</h3><a href="#">درباره ما</a><a href="#">حریم خصوصی</a><a href="#">شرایط استفاده</a></div></div><div class="container note">© 2026 نرخ‌یار. تمامی حقوق محفوظ است.</div></footer>
+
+<script>
+const currencies={USD:{name:"دالر",rate:1},EUR:{name:"یورو",rate:.855},GBP:{name:"پوند",rate:.738},AFN:{name:"افغانی",rate:68.2},IRR:{name:"تومان",rate:104500}};
+let assets=[
+{id:"gold",name:"طلا",symbol:"XAU/USD",unit:"انس",price:3650.20,change:.85,type:"فلزات"},
+{id:"silver",name:"نقره",symbol:"XAG/USD",unit:"انس",price:41.15,change:-.40,type:"فلزات"},
+{id:"usd",name:"دالر آمریکا",symbol:"USD/AFN",unit:"واحد",price:68.20,change:.12,type:"ارز"},
+{id:"eur",name:"یورو",symbol:"EUR/AFN",unit:"واحد",price:79.80,change:.35,type:"ارز"},
+{id:"gbp",name:"پوند انگلیس",symbol:"GBP/AFN",unit:"واحد",price:92.40,change:-.18,type:"ارز"},
+{id:"irr",name:"تومان",symbol:"IRR/AFN",unit:"واحد",price:.00065,change:.22,type:"ارز"}];
+
+const charts={};
+function monthlyData(base){let a=[],v=base*.94;for(let i=0;i<30;i++){v*=1+(Math.random()-.47)*.018;a.push(v)}a[29]=base;return a}
+function updateAssetDOM(id,newPrice,percentChange=null){
+  const asset=assets.find(a=>a.id===id); if(!asset||!Number.isFinite(newPrice)) return;
+  const old=asset.price;
+  if(percentChange===null && old) percentChange=((newPrice-old)/old)*100;
+  asset.price=newPrice; asset.change=Number.isFinite(percentChange)?percentChange:0;
+  const canvas=document.getElementById('chart-'+id); if(!canvas) return;
+  const card=canvas.closest('.card'); if(!card) return;
+  const priceEl=card.querySelector('.price'); const changeEl=card.querySelector('.change');
+  if(priceEl) priceEl.textContent=formatPrice(newPrice,id);
+  if(changeEl){const pos=asset.change>=0;changeEl.className='change '+(pos?'up':'down');changeEl.textContent=(pos?'▲ ':'▼ ')+Math.abs(asset.change).toFixed(2)+'%';}
+  if(charts[id]){const d=charts[id].data.datasets[0].data;d.push(newPrice);if(d.length>30)d.shift();charts[id].update('none');}
+}
+function formatPrice(v,id){if(id==="irr")return v.toFixed(5)+" AFN";if(["usd","eur","gbp"].includes(id))return v.toFixed(2)+" AFN";return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function renderMarkets(){
+ const grid=document.getElementById("marketGrid");grid.innerHTML="";
+ Object.values(charts).forEach(c=>c.destroy());
+ assets.forEach(a=>{const c=document.createElement("div");c.className="card";c.innerHTML=`<div class="cardtop"><div class="name">${a.name}<span class="symbol">${a.symbol} · ${a.unit}</span></div><span class="badge">${a.type}</span></div><div class="price">${formatPrice(a.price,a.id)}</div><div class="change ${a.change>=0?"up":"down"}">${a.change>=0?"▲":"▼"} ${Math.abs(a.change).toFixed(2)}%</div><div class="chartwrap"><canvas id="chart-${a.id}"></canvas></div>`;grid.appendChild(c);
+ charts[a.id]=new Chart(c.querySelector("canvas"),{type:"line",data:{labels:Array(30).fill(""),datasets:[{data:monthlyData(a.price),borderWidth:2,pointRadius:0,tension:.35,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{display:false}}}});
+ });document.getElementById("lastUpdate").textContent=new Date().toLocaleTimeString("fa-IR")
+}
+function updatePrices(){assets.forEach(a=>{a.change=Math.max(-9,Math.min(9,a.change+(Math.random()-.48)*.12));a.price*=1+(Math.random()-.5)*.0015});renderMarkets()}
+function fillCurrencyLists(){["fxFrom","fxTo","metalCurrency"].forEach(id=>{const s=document.getElementById(id);Object.entries(currencies).forEach(([k,v])=>s.add(new Option(`${v.name} (${k})`,k)))});fxFrom.value="USD";fxTo.value="AFN";metalCurrency.value="AFN"}
+function fxConvert(){let n=+fxAmount.value||0,f=fxFrom.value,t=fxTo.value;let r=(n/currencies[f].rate)*currencies[t].rate;fxResult.textContent=r.toLocaleString("fa-IR",{maximumFractionDigits:4})+" "+t}
+function metalConvert(){let g=+metalAmount.value||0,t=metal.value,c=metalCurrency.value,a=assets.find(x=>x.id===t);let r=(g*a.price/31.1034768)/currencies[c].rate;metalResult.textContent=r.toLocaleString("fa-IR",{maximumFractionDigits:2})+" "+c}
+function toggleTheme(){let dark=document.documentElement.getAttribute("data-theme")==="dark";document.documentElement.setAttribute("data-theme",dark?"light":"dark");localStorage.setItem("theme",dark?"light":"dark");themeBtn.textContent=dark?"🌙 حالت تاریک":"☀️ حالت روشن"}
+async function fetchLiveRates(){
+  try{
+    const response=await fetch('api.php?t='+Date.now(),{cache:'no-store'});
+    if(!response.ok) throw new Error('HTTP '+response.status);
+    const data=await response.json();
+
+    // DAB official cash-sell rates: AFN per unit.
+    if(data.rates?.USD?.sell) updateAssetDOM('usd',Number(data.rates.USD.sell));
+    if(data.rates?.EUR?.sell) updateAssetDOM('eur',Number(data.rates.EUR.sell));
+    if(data.rates?.GBP?.sell) updateAssetDOM('gbp',Number(data.rates.GBP.sell));
+    if(data.rates?.IRR?.sell) updateAssetDOM('irr',Number(data.rates.IRR.sell));
+
+    // GoldAPI: USD per troy ounce.
+    if(data.rates?.XAU?.price) updateAssetDOM('gold',Number(data.rates.XAU.price));
+    if(data.rates?.XAG?.price) updateAssetDOM('silver',Number(data.rates.XAG.price));
+
+    const el=document.getElementById('lastUpdate');
+    if(el) el.textContent=new Date().toLocaleTimeString('fa-IR');
+  }catch(e){
+    console.error('خطا در دریافت نرخ‌ها:',e);
+  }
+}
+
+async function updatePrices(){
+  // فقط داده نرخ‌ها به‌روزرسانی می‌شود؛ صفحه هرگز reload نمی‌شود.
+  await fetchLiveRates();
+}
+
+document.querySelectorAll("select,input").forEach(e=>e.addEventListener("input",()=>{fxConvert();metalConvert()}));
+if(localStorage.getItem("theme")==="dark")toggleTheme();fillCurrencyLists();renderMarkets();fxConvert();metalConvert();fetchLiveRates();setInterval(updatePrices,5000);
+</script>
+</body>
+</html>
