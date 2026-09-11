@@ -1,0 +1,6 @@
+{
+  "name": "Afghan Gold & Oil Live World Prices",
+  "description": "Real-time second-by-second world prices for gold, precious metals, and crude oil in Afghanistan metrics (Miscal, Tola, Gram, Barrel, Liter) with live USD and AFN currency conversion and interactive multi-timeframe charts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

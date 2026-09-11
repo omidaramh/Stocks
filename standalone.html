@@ -1,3 +1,12 @@
+<!-- 
+  AFGHAN GOLD, EXPENSIVE METALS & OIL LIVE WORLD PRICES
+  STANDALONE GITHUB PAGES COMPATIBLE FILE
+  To use this on GitHub Pages:
+  1. Simply rename this file to "index.html" in your GitHub repository root
+  2. Go to your GitHub Repository -> Settings -> Pages
+  3. Under "Branch", select "main" (or "master") and folder "/ (root)"
+  4. Click "Save"! It works immediately with 0 dependencies, 0 build tools, 100% vanilla HTML + JS!
+-->
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -42,7 +51,6 @@
 
   <!-- Top Sticky Header -->
   <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
-    <!-- Top Micro Bar -->
     <div class="max-w-7xl mx-auto px-4 py-2 border-b border-slate-900 flex flex-wrap items-center justify-between gap-3 text-xs">
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800">
@@ -92,7 +100,6 @@
       </div>
 
       <div class="flex items-center flex-wrap gap-2.5">
-        <!-- Currency switch -->
         <div class="flex items-center p-0.5 rounded-lg bg-slate-900 border border-slate-800 text-xs">
           <button id="curr-afn-btn" class="px-3 py-1.5 rounded-md font-bold bg-amber-500 text-slate-950 shadow-sm transition-all">
             افغانی (AFN ؋)
@@ -102,7 +109,6 @@
           </button>
         </div>
 
-        <!-- Language switch -->
         <div class="flex items-center rounded-lg bg-slate-900 border border-slate-800 p-0.5 text-xs font-medium">
           <button id="lang-fa-btn" class="px-2 py-1 rounded bg-slate-800 text-amber-400 font-bold">دری</button>
           <button id="lang-ps-btn" class="px-2 py-1 rounded text-slate-400 hover:text-slate-200">پښتو</button>
@@ -115,7 +121,6 @@
   <!-- Live Ticker Ribbon -->
   <div class="bg-slate-900/60 border-y border-slate-800 overflow-x-auto no-scrollbar py-2 px-4">
     <div id="ticker-ribbon-container" class="flex items-center gap-3 min-w-max">
-      <!-- Injected via JS -->
     </div>
   </div>
 
@@ -139,7 +144,6 @@
         </div>
 
         <div class="flex items-center flex-wrap gap-2">
-          <!-- Asset switcher -->
           <select id="chart-commodity-select" class="bg-slate-950 border border-slate-700 text-amber-300 text-xs rounded-lg px-3 py-1.5 font-bold focus:outline-none">
             <option value="gold">طلای جهانی (Gold Spot)</option>
             <option value="silver">نقره جهانی (Silver Spot)</option>
@@ -159,7 +163,6 @@
           <span id="chart-unit-desc" class="text-[11px] text-slate-400">واحد سنتی طلافروشی افغانستان</span>
         </div>
         <div id="chart-units-container" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-          <!-- Injected via JS -->
         </div>
       </div>
 
@@ -178,7 +181,6 @@
       <!-- Chart SVG Canvas -->
       <div class="relative mt-2 select-none">
         <svg id="main-chart-svg" viewBox="0 0 800 320" class="w-full h-64 md:h-80 overflow-visible cursor-crosshair">
-          <!-- Chart rendered dynamically via JS -->
         </svg>
       </div>
 
@@ -219,7 +221,6 @@
         </div>
       </div>
       <div id="sarai-shahzada-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 mt-4">
-        <!-- Injected via JS -->
       </div>
     </section>
 
@@ -266,7 +267,6 @@
     <section>
       <h3 class="text-lg font-bold text-white mb-3">فهرست کامل فلزات گرانبها و نفت خام جهانی</h3>
       <div id="commodities-deck" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Injected via JS -->
       </div>
     </section>
   </main>
@@ -290,7 +290,6 @@
 
   <!-- Pure Standalone JavaScript Engine -->
   <script>
-    // State
     let usdToAfnRate = 71.25;
     let currency = 'AFN';
     let lang = 'fa';
@@ -340,7 +339,6 @@
       return curr === 'AFN' ? usdPrice * usdToAfnRate : usdPrice;
     }
 
-    // Generate historical curve
     function getHistoricalCurve(commId, currentPriceUSD, tf) {
       let count = tf === '1H' ? 60 : tf === '24H' ? 48 : tf === '1M' ? 30 : tf === '1Y' ? 52 : 12;
       let points = [];
@@ -355,7 +353,6 @@
       return points;
     }
 
-    // Render Chart
     function renderChart() {
       const comm = commodities.find(c => c.id === selectedCommodityId) || commodities[0];
       const u = UNITS[selectedUnitKey] || UNITS[comm.defaultUnit];
@@ -388,7 +385,6 @@
       statChange.innerText = (change >= 0 ? '+' : '') + changePct.toFixed(2) + '%';
       statChange.className = 'font-mono font-bold text-sm ' + (change >= 0 ? 'text-emerald-400' : 'text-rose-400');
 
-      // SVG render
       const svg = document.getElementById('main-chart-svg');
       const w = 800, h = 320, pTop = 20, pBottom = 35, pLeft = 70, pRight = 20;
       const innerW = w - pLeft - pRight;
@@ -428,7 +424,6 @@
       `;
     }
 
-    // Render Unit Buttons for Chart
     function renderUnitButtons() {
       const comm = commodities.find(c => c.id === selectedCommodityId) || commodities[0];
       const container = document.getElementById('chart-units-container');
@@ -451,7 +446,6 @@
       renderChart();
     };
 
-    // Render Sarai Shahzada Kabul Board
     function renderSaraiShahzada() {
       const gold = commodities.find(c => c.id === 'gold');
       const brent = commodities.find(c => c.id === 'brent_oil');
@@ -497,7 +491,6 @@
       }).join('');
     }
 
-    // Render Ticker Ribbon
     function renderTickerRibbon() {
       const items = [
         { id: 'gold', u: 'miscal_24k', label: 'طلای ۲۴ مثقال' },
@@ -527,7 +520,6 @@
       }).join('');
     }
 
-    // Render Commodities Deck
     function renderCommoditiesDeck() {
       const deck = document.getElementById('commodities-deck');
       deck.innerHTML = commodities.map(c => {
@@ -578,7 +570,6 @@
       window.scrollTo({ top: 120, behavior: 'smooth' });
     };
 
-    // Calculator updates
     function initCalculator() {
       const commSel = document.getElementById('calc-comm-select');
       const unitSel = document.getElementById('calc-unit-select');
@@ -608,7 +599,6 @@
       updateCalcUnits();
     }
 
-    // Kabul clock
     function updateClock() {
       const now = new Date();
       const utc = now.getTime() + now.getTimezoneOffset() * 60000;
@@ -616,7 +606,6 @@
       document.getElementById('kabul-clock').innerText = kabul.toLocaleTimeString('en-US', { hour12: false });
     }
 
-    // Second-by-second Tick Engine
     setInterval(() => {
       updateClock();
       if (!isStreaming) return;
@@ -636,12 +625,10 @@
       renderChart();
     }, 1000);
 
-    // Initial setup
     document.getElementById('chart-commodity-select').addEventListener('change', e => {
       window.selectCommodity(e.target.value);
     });
 
-    // Timeframe buttons
     document.getElementById('timeframe-buttons').addEventListener('click', e => {
       const btn = e.target.closest('button');
       if (!btn) return;
@@ -653,7 +640,6 @@
       renderChart();
     });
 
-    // Currency toggle
     document.getElementById('curr-afn-btn').addEventListener('click', () => {
       currency = 'AFN';
       document.getElementById('curr-afn-btn').className = 'px-3 py-1.5 rounded-md font-bold bg-amber-500 text-slate-950 shadow-sm transition-all';
@@ -667,7 +653,6 @@
       renderAll();
     });
 
-    // Toggle live stream
     document.getElementById('toggle-stream-btn').addEventListener('click', () => {
       isStreaming = !isStreaming;
       document.getElementById('toggle-stream-text').innerText = isStreaming ? 'توقف نوسان زنده' : 'ادامه نوسان زنده';
