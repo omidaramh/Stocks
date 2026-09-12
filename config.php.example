@@ -1,8 +1,0 @@
-<?php
-// Rename this file to config.php and enter your keys.
-return [
-  // GoldAPI key for live XAU/XAG prices. https://www.goldapi.io/
-  'goldapi_key' => 'YOUR_GOLDAPI_KEY',
-  // Set false if you only want official DAB rates.
-  'use_goldapi' => true,
-];

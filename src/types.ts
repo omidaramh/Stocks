@@ -1,4 +1,4 @@
-export type AssetCategory = 'precious_metals' | 'energy';
+export type AssetCategory = 'precious_metals' | 'energy' | 'stocks';
 
 export type Timeframe = '1H' | '24H' | '1M' | '1Y' | 'ALL';
 
@@ -6,22 +6,22 @@ export type Currency = 'AFN' | 'USD';
 
 export type DisplayMode = 'AFN' | 'USD' | 'BOTH';
 
-export type Language = 'en' | 'fa' | 'ps';
+export type Language = 'en' | 'fa';
+
+export type Theme = 'dark' | 'light';
 
 export type GoldPurity = '24K' | '22K' | '21K' | '18K' | '14K';
 
 export type MetalUnitKey =
-  | 'miscal_24k'
-  | 'miscal_22k'
-  | 'miscal_21k'
-  | 'miscal_18k'
   | 'gram_24k'
   | 'gram_21k'
   | 'gram_18k'
-  | 'tola'
   | 'troy_oz'
-  | 'kg'
-  | 'seer_kabul';
+  | 'troy_oz_21k'
+  | 'troy_oz_18k'
+  | 'miscal_24k'
+  | 'miscal_21k'
+  | 'tola';
 
 export type OilUnitKey =
   | 'barrel'
@@ -35,7 +35,7 @@ export interface UnitDefinition {
   id: AnyUnitKey;
   nameEn: string;
   nameFa: string;
-  namePs: string;
+  namePs?: string;
   symbol: string;
   symbolFa: string;
   descriptionEn: string;
@@ -45,12 +45,31 @@ export interface UnitDefinition {
   purity?: GoldPurity;
 }
 
+export interface StockCompany {
+  id: string;
+  symbol: string;
+  nameEn: string;
+  nameFa: string;
+  sectorEn: string;
+  sectorFa: string;
+  priceUSD: number;
+  previousPriceUSD: number;
+  change24hUSD: number;
+  changePercent24h: number;
+  high24hUSD: number;
+  low24hUSD: number;
+  openPriceUSD: number;
+  marketCap?: string;
+  lastUpdated?: number;
+  accentColor?: string;
+}
+
 export interface Commodity {
   id: string;
   symbol: string;
   nameEn: string;
   nameFa: string;
-  namePs: string;
+  namePs?: string;
   category: AssetCategory;
   baseUnitEn: string;
   baseUnitFa: string;

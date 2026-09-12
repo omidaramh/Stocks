@@ -1,10 +1,11 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { Commodity, DisplayMode, Language } from '../types';
+import { Commodity, DisplayMode, Language, StockCompany } from '../types';
 import { calculateConvertedPrice, formatPrice } from '../utils/formatters';
 
 interface TickerRibbonProps {
   commodities: Commodity[];
+  stocks?: StockCompany[];
   usdToAfnRate: number;
   currencyMode: DisplayMode;
   lang: Language;
@@ -14,87 +15,101 @@ interface TickerRibbonProps {
 
 export const TickerRibbon: React.FC<TickerRibbonProps> = ({
   commodities,
+  stocks = [],
   usdToAfnRate,
   currencyMode,
   lang,
   onSelectCommodity,
   selectedId,
 }) => {
-  // Key highlighted items for the rapid ticker ribbon
+  // Key highlighted items strictly covering:
+  // Metals: Gold, Silver, Platinum (Gram & Ounce)
+  // Fuels: Diesel, Petrol, Gas (Barrel & Liter)
   const ribbonItems = [
     {
       commodityId: 'gold',
-      unitKey: 'miscal_24k' as const,
-      labelEn: 'Gold 24K (Miscal)',
-      labelFa: 'طلای ۲۴ (مثقال)',
-      labelPs: '۲۴ عیار طلا (مثقال)',
-    },
-    {
-      commodityId: 'gold',
-      unitKey: 'miscal_21k' as const,
-      labelEn: 'Gold 21K (Miscal)',
-      labelFa: 'طلای ۲۱ (مثقال - رایج)',
-      labelPs: '۲۱ عیار طلا (مثقال)',
-    },
-    {
-      commodityId: 'gold',
       unitKey: 'gram_24k' as const,
-      labelEn: 'Gold (1 Gram)',
-      labelFa: 'طلای ۲۴ (۱ گرام)',
-      labelPs: 'طلا (۱ ګرام)',
+      labelEn: 'Gold (1 gr)',
+      labelFa: 'طلا (۱ گرام)',
+    },
+    {
+      commodityId: 'gold',
+      unitKey: 'troy_oz' as const,
+      labelEn: 'Gold (1 oz)',
+      labelFa: 'طلا (۱ اونس)',
     },
     {
       commodityId: 'silver',
-      unitKey: 'miscal_24k' as const,
-      labelEn: 'Silver (Miscal)',
-      labelFa: 'نقره (مثقال)',
-      labelPs: 'نقره (مثقال)',
+      unitKey: 'gram_24k' as const,
+      labelEn: 'Silver (1 gr)',
+      labelFa: 'نقره (۱ گرام)',
     },
     {
-      commodityId: 'brent_oil',
-      unitKey: 'barrel' as const,
-      labelEn: 'Brent Oil (Barrel)',
-      labelFa: 'نفت برنت (بشکه)',
-      labelPs: 'برینټ نفت (بیرل)',
-    },
-    {
-      commodityId: 'brent_oil',
-      unitKey: 'liter' as const,
-      labelEn: 'Brent Oil (1 Liter)',
-      labelFa: 'نفت (۱ لیتر)',
-      labelPs: 'نفت (۱ لیتر)',
-    },
-    {
-      commodityId: 'wti_oil',
-      unitKey: 'barrel' as const,
-      labelEn: 'WTI Oil (Barrel)',
-      labelFa: 'نفت وست تگزاس (بشکه)',
-      labelPs: 'ډبلیو ټي آی (بیرل)',
+      commodityId: 'silver',
+      unitKey: 'troy_oz' as const,
+      labelEn: 'Silver (1 oz)',
+      labelFa: 'نقره (۱ اونس)',
     },
     {
       commodityId: 'platinum',
       unitKey: 'gram_24k' as const,
-      labelEn: 'Platinum (1g)',
+      labelEn: 'Platinum (1 gr)',
       labelFa: 'پلاتین (۱ گرام)',
-      labelPs: 'پلاتینیم (۱ ګرام)',
     },
     {
-      commodityId: 'rhodium',
-      unitKey: 'gram_24k' as const,
-      labelEn: 'Rhodium (1g)',
-      labelFa: 'رودیوم (۱ گرام)',
-      labelPs: 'رودیم (۱ ګرام)',
+      commodityId: 'platinum',
+      unitKey: 'troy_oz' as const,
+      labelEn: 'Platinum (1 oz)',
+      labelFa: 'پلاتین (۱ اونس)',
+    },
+    {
+      commodityId: 'diesel',
+      unitKey: 'liter' as const,
+      labelEn: 'Diesel (1 L)',
+      labelFa: 'دیزل (۱ لیتر)',
+    },
+    {
+      commodityId: 'diesel',
+      unitKey: 'barrel' as const,
+      labelEn: 'Diesel (1 bbl)',
+      labelFa: 'دیزل (۱ بشکه)',
+    },
+    {
+      commodityId: 'petrol',
+      unitKey: 'liter' as const,
+      labelEn: 'Petrol (1 L)',
+      labelFa: 'پترول (۱ لیتر)',
+    },
+    {
+      commodityId: 'petrol',
+      unitKey: 'barrel' as const,
+      labelEn: 'Petrol (1 bbl)',
+      labelFa: 'پترول (۱ بشکه)',
+    },
+    {
+      commodityId: 'gas',
+      unitKey: 'liter' as const,
+      labelEn: 'Gas (1 L)',
+      labelFa: 'گاز مایع (۱ لیتر)',
+    },
+    {
+      commodityId: 'gas',
+      unitKey: 'barrel' as const,
+      labelEn: 'Gas (1 boe)',
+      labelFa: 'گاز طبیعی (بشکه)',
     },
   ];
 
   return (
-    <div className="bg-slate-900/60 border-y border-slate-800/80 overflow-x-auto no-scrollbar py-2 px-4">
+    <div id="ticker-ribbon" className="bg-white/80 dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800/80 overflow-x-auto no-scrollbar py-2 px-4 transition-colors">
       <div className="flex items-center gap-3 min-w-max">
-        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/30 rounded text-[11px] font-bold text-amber-400 uppercase tracking-wider">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-          <span>{lang === 'fa' ? 'تابلو زنده لحظه‌ای' : lang === 'ps' ? 'ژوندۍ تخته' : 'LIVE 1s TICKER'}</span>
+        {/* Live Badge */}
+        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/30 rounded text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+          <span>{lang === 'fa' ? 'تابلو زنده' : 'LIVE 1s TICKER'}</span>
         </div>
 
+        {/* Commodity Tickers */}
         {ribbonItems.map((item, idx) => {
           const commodity = commodities.find((c) => c.id === item.commodityId);
           if (!commodity) return null;
@@ -113,31 +128,24 @@ export const TickerRibbon: React.FC<TickerRibbonProps> = ({
           );
 
           const isSelected = selectedId === commodity.id;
-          const label = lang === 'fa' ? item.labelFa : lang === 'ps' ? item.labelPs : item.labelEn;
+          const label = lang === 'fa' ? item.labelFa : item.labelEn;
 
           const tickClass =
             commodity.lastTickDirection === 'up'
-              ? 'text-emerald-400'
+              ? 'text-emerald-600 dark:text-emerald-400'
               : commodity.lastTickDirection === 'down'
-              ? 'text-rose-400'
-              : 'text-slate-200';
-
-          const flashBorder =
-            commodity.lastTickDirection === 'up'
-              ? 'border-emerald-500/40 bg-emerald-950/20'
-              : commodity.lastTickDirection === 'down'
-              ? 'border-rose-500/40 bg-rose-950/20'
-              : 'border-slate-800 bg-slate-950/60';
+              ? 'text-rose-600 dark:text-rose-400'
+              : 'text-slate-800 dark:text-slate-200';
 
           return (
             <button
               key={`${item.commodityId}-${item.unitKey}-${idx}`}
               onClick={() => onSelectCommodity(commodity.id)}
-              className={`flex items-center gap-2.5 px-3 py-1.5 rounded-lg border transition-all text-xs text-left cursor-pointer hover:border-slate-700 ${flashBorder} ${
-                isSelected ? 'ring-1 ring-amber-500/60 shadow-sm' : ''
+              className={`flex items-center gap-2 px-2.5 py-1 rounded-lg border transition-all text-xs text-left cursor-pointer bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 ${
+                isSelected ? 'ring-1 ring-amber-500/60 shadow-xs' : ''
               }`}
             >
-              <span className="font-semibold text-slate-300">{label}:</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">{label}:</span>
 
               <div className="flex items-center gap-1.5 font-mono">
                 {currencyMode === 'AFN' && (
@@ -151,28 +159,51 @@ export const TickerRibbon: React.FC<TickerRibbonProps> = ({
                   </span>
                 )}
                 {currencyMode === 'BOTH' && (
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-baseline gap-1">
                     <span className={`font-bold ${tickClass}`}>
                       {formatPrice(priceAFN, 'AFN')}
                     </span>
-                    <span className="text-[10px] text-slate-500">/</span>
-                    <span className="text-slate-400">
-                      {formatPrice(priceUSD, 'USD')}
+                    <span className="text-[10px] text-slate-400">
+                      ({formatPrice(priceUSD, 'USD')})
                     </span>
                   </div>
                 )}
 
-                {commodity.lastTickDirection === 'up' && (
-                  <TrendingUp className="w-3 h-3 text-emerald-400 shrink-0" />
-                )}
-                {commodity.lastTickDirection === 'down' && (
-                  <TrendingDown className="w-3 h-3 text-rose-400 shrink-0" />
-                )}
-                {commodity.lastTickDirection === 'same' && (
-                  <Minus className="w-2.5 h-2.5 text-slate-500 shrink-0" />
-                )}
+                {/* Change percent */}
+                <span
+                  className={`inline-flex items-center text-[10px] font-bold ${
+                    commodity.change24hUSD >= 0
+                      ? 'text-emerald-600 dark:text-emerald-400'
+                      : 'text-rose-600 dark:text-rose-400'
+                  }`}
+                >
+                  {commodity.change24hUSD >= 0 ? '+' : ''}
+                  {commodity.changePercent24h.toFixed(1)}%
+                </span>
               </div>
             </button>
+          );
+        })}
+
+        {/* Stock Mini Tickers */}
+        {stocks.slice(0, 5).map((stock) => {
+          const isPositive = stock.changePercent24h >= 0;
+          return (
+            <div
+              key={`ticker-stock-${stock.symbol}`}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800"
+            >
+              <span className="font-bold text-slate-800 dark:text-slate-200">{stock.symbol}:</span>
+              <span className="font-mono font-semibold text-slate-900 dark:text-white">${stock.priceUSD.toFixed(2)}</span>
+              <span
+                className={`text-[10px] font-bold ${
+                  isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                }`}
+              >
+                {isPositive ? '+' : ''}
+                {stock.changePercent24h.toFixed(1)}%
+              </span>
+            </div>
           );
         })}
       </div>

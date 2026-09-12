@@ -1,0 +1,677 @@
+<!-- 
+  AFGHAN GOLD, EXPENSIVE METALS & OIL LIVE WORLD PRICES
+  STANDALONE GITHUB PAGES COMPATIBLE FILE
+  To use this on GitHub Pages:
+  1. Simply rename this file to "index.html" in your GitHub repository root
+  2. Go to your GitHub Repository -> Settings -> Pages
+  3. Under "Branch", select "main" (or "master") and folder "/ (root)"
+  4. Click "Save"! It works immediately with 0 dependencies, 0 build tools, 100% vanilla HTML + JS!
+-->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نرخ لحظه‌ای طلا و نفت افغانستان | Afghan Gold & Oil Live World Prices</title>
+  <meta name="description" content="Live second-by-second world prices for gold, precious metals and crude oil in Afghanistan metrics (Miscal, Tola, Gram, Barrel, Liter) with USD & AFN live conversion." />
+  
+  <!-- Tailwind CSS via CDN (100% Standalone for GitHub Pages) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      font-variant-numeric: tabular-nums;
+      -webkit-font-smoothing: antialiased;
+    }
+    [dir="ltr"] {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+    @keyframes flash-green {
+      0% { background-color: rgba(16, 185, 129, 0.35); color: #10b981; }
+      100% { background-color: transparent; }
+    }
+    @keyframes flash-red {
+      0% { background-color: rgba(244, 63, 94, 0.35); color: #f43f5e; }
+      100% { background-color: transparent; }
+    }
+    .flash-up { animation: flash-green 0.8s ease-out; }
+    .flash-down { animation: flash-red 0.8s ease-out; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- Top Sticky Header -->
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-2 border-b border-slate-900 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800">
+          <span id="live-indicator-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span id="live-status-text" class="font-semibold text-[11px] text-slate-200">پخش زنده بازار</span>
+          <span class="text-[10px] text-slate-400 border-l border-slate-700 pl-1.5 ml-1">1s</span>
+        </div>
+        <button id="toggle-stream-btn" class="flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition-colors">
+          <span id="toggle-stream-text">توقف نوسان زنده</span>
+        </button>
+        <span class="hidden md:inline-block text-slate-400 text-[11px]">
+          تیک‌های زنده: <span id="tick-counter" class="text-slate-200 font-mono font-bold">0</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 font-mono">
+          <span class="text-slate-400 text-[11px]">USD/AFN:</span>
+          <span id="exchange-rate-display" class="font-bold text-amber-400">1$ = 71.25 ؋</span>
+        </div>
+        <div class="flex items-center gap-1.5 text-slate-300 font-mono bg-slate-900 px-2.5 py-1 rounded-md border border-slate-800">
+          <span id="kabul-clock" class="font-semibold text-slate-200">--:--:--</span>
+          <span class="text-[10px] text-amber-400">کابل (AFT)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-300 flex items-center justify-center text-slate-950 font-bold text-lg shadow-lg">
+          ؋
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg md:text-xl font-bold tracking-tight text-white">
+              نرخ لحظه‌ای طلا، فلزات و نفت افغانستان
+            </h1>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              سرای شهزاده
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">
+            بروزرسانی ثانیه‌ای با معیارهای سنتی افغانستان (مثقال، توله، سیر، لیتر) به افغانی و دالر
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center flex-wrap gap-2.5">
+        <div class="flex items-center p-0.5 rounded-lg bg-slate-900 border border-slate-800 text-xs">
+          <button id="curr-afn-btn" class="px-3 py-1.5 rounded-md font-bold bg-amber-500 text-slate-950 shadow-sm transition-all">
+            افغانی (AFN ؋)
+          </button>
+          <button id="curr-usd-btn" class="px-3 py-1.5 rounded-md font-medium text-slate-400 hover:text-white transition-all">
+            USD ($)
+          </button>
+        </div>
+
+        <div class="flex items-center rounded-lg bg-slate-900 border border-slate-800 p-0.5 text-xs font-medium">
+          <button id="lang-fa-btn" class="px-2 py-1 rounded bg-slate-800 text-amber-400 font-bold">دری</button>
+          <button id="lang-ps-btn" class="px-2 py-1 rounded text-slate-400 hover:text-slate-200">پښتو</button>
+          <button id="lang-en-btn" class="px-2 py-1 rounded text-slate-400 hover:text-slate-200">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Ticker Ribbon -->
+  <div class="bg-slate-900/60 border-y border-slate-800 overflow-x-auto no-scrollbar py-2 px-4">
+    <div id="ticker-ribbon-container" class="flex items-center gap-3 min-w-max">
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+    
+    <!-- Interactive Chart Component -->
+    <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl backdrop-blur-sm">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <h2 id="chart-asset-title" class="text-xl md:text-2xl font-bold text-white tracking-tight">طلای جهانی (انس/مثقال)</h2>
+            <span id="chart-asset-symbol" class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono border border-slate-700">XAU/USD</span>
+            <span id="chart-unit-badge" class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium">مثقال عیار ۲۴</span>
+          </div>
+
+          <div class="flex items-baseline gap-3 mt-1.5 flex-wrap">
+            <div id="chart-active-price" class="text-2xl md:text-3xl font-extrabold font-mono text-white tracking-tight">--</div>
+            <div id="chart-active-change" class="text-sm font-semibold font-mono text-emerald-400">--</div>
+          </div>
+        </div>
+
+        <div class="flex items-center flex-wrap gap-2">
+          <select id="chart-commodity-select" class="bg-slate-950 border border-slate-700 text-amber-300 text-xs rounded-lg px-3 py-1.5 font-bold focus:outline-none">
+            <option value="gold">طلای جهانی (Gold Spot)</option>
+            <option value="silver">نقره جهانی (Silver Spot)</option>
+            <option value="brent_oil">نفت برنت (Brent Crude)</option>
+            <option value="wti_oil">نفت وست تگزاس (WTI Crude)</option>
+            <option value="platinum">پلاتین (Platinum)</option>
+            <option value="palladium">پالادیوم (Palladium)</option>
+            <option value="rhodium">رودیوم (Rhodium)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Unit Selector Row for Chart -->
+      <div class="py-3 border-b border-slate-800/80">
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <span class="text-xs font-semibold text-slate-300">انتخاب واحد اندازه‌گیری برای نمودار:</span>
+          <span id="chart-unit-desc" class="text-[11px] text-slate-400">واحد سنتی طلافروشی افغانستان</span>
+        </div>
+        <div id="chart-units-container" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+        </div>
+      </div>
+
+      <!-- Timeframe Selector (1H, 24H, 1M, 1Y, ALL) -->
+      <div class="flex items-center justify-between flex-wrap gap-2 py-2.5">
+        <span class="text-xs font-medium text-slate-400">دوره زمانی:</span>
+        <div id="timeframe-buttons" class="flex items-center p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+          <button data-tf="1H" class="px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all">۱ ساعت (1H)</button>
+          <button data-tf="24H" class="px-3 py-1 rounded-lg font-bold bg-amber-500 text-slate-950 shadow-sm transition-all">۲۴ ساعت (24H)</button>
+          <button data-tf="1M" class="px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all">۱ ماه (1M)</button>
+          <button data-tf="1Y" class="px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all">۱ سال (1Y)</button>
+          <button data-tf="ALL" class="px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all">کل تاریخ (ALL)</button>
+        </div>
+      </div>
+
+      <!-- Chart SVG Canvas -->
+      <div class="relative mt-2 select-none">
+        <svg id="main-chart-svg" viewBox="0 0 800 320" class="w-full h-64 md:h-80 overflow-visible cursor-crosshair">
+        </svg>
+      </div>
+
+      <!-- Period Stats -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-slate-800/80">
+        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+          <span class="text-[11px] text-slate-400 block">بیشترین نرخ دوره</span>
+          <span id="stat-max" class="font-mono font-bold text-emerald-400 text-sm">--</span>
+        </div>
+        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+          <span class="text-[11px] text-slate-400 block">کمترین نرخ دوره</span>
+          <span id="stat-min" class="font-mono font-bold text-rose-400 text-sm">--</span>
+        </div>
+        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+          <span class="text-[11px] text-slate-400 block">میانگین نرخ</span>
+          <span id="stat-avg" class="font-mono font-bold text-slate-200 text-sm">--</span>
+        </div>
+        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+          <span class="text-[11px] text-slate-400 block">تغییرات دوره</span>
+          <span id="stat-change" class="font-mono font-bold text-sm text-emerald-400">--</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sarai Shahzada Kabul Official Board -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+        <div>
+          <h3 class="text-lg md:text-xl font-bold text-white tracking-tight">
+            تابلوی رسمی طلا و سوخت سرای شهزاده کابل
+          </h3>
+          <p class="text-xs text-slate-400">
+            نرخ‌های مرجع بازار صرافی و طلافروشی کابل به افغانی (؋) و دالر ($)
+          </p>
+        </div>
+        <div class="text-xs text-slate-400 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span class="text-amber-400 font-bold">1 USD = 71.25 AFN</span>
+        </div>
+      </div>
+      <div id="sarai-shahzada-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 mt-4">
+      </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
+      <h3 class="text-lg font-bold text-white mb-1">ماشین حساب تبدیل طلا، سوخت و اسعار افغانستان</h3>
+      <p class="text-xs text-slate-400 mb-4">محاسبه فوری بر اساس مثقال، گرام، توله، لیتر و بشکه به افغانی و دالر</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div class="lg:col-span-7 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-semibold text-slate-300 block mb-1">انتخاب کالا:</label>
+              <select id="calc-comm-select" class="w-full bg-slate-950 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-medium"></select>
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-slate-300 block mb-1">واحد اندازه‌گیری:</label>
+              <select id="calc-unit-select" class="w-full bg-slate-950 border border-slate-700 text-amber-300 rounded-xl px-3 py-2 text-xs font-medium"></select>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">مقدار / وزن:</label>
+            <input id="calc-amount-input" type="number" step="0.1" value="5" class="w-full bg-slate-950 border border-slate-700 text-white font-mono text-base font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500" />
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-gradient-to-br from-slate-950 to-slate-900 border border-amber-500/30 rounded-2xl p-4 flex flex-col justify-between shadow-inner">
+          <div>
+            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block pb-2 border-b border-slate-800">ارزش کل محاسبه شده</span>
+            <div class="mt-3">
+              <span class="text-xs text-slate-400 block">مبلغ به پول افغانی:</span>
+              <div id="calc-result-afn" class="text-2xl font-extrabold font-mono text-amber-300 mt-1">--</div>
+            </div>
+            <div class="mt-2 pt-2 border-t border-slate-800">
+              <span class="text-xs text-slate-400 block">معادل به دالر آمریکایی:</span>
+              <div id="calc-result-usd" class="text-xl font-bold font-mono text-slate-200 mt-0.5">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Commodities Grid -->
+    <section>
+      <h3 class="text-lg font-bold text-white mb-3">فهرست کامل فلزات گرانبها و نفت خام جهانی</h3>
+      <div id="commodities-deck" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950/90 py-6 px-4 mt-12 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <p>مرکز نرخ‌های لحظه‌ای طلا، نقره و نفت افغانستان - هماهنگ با صرافی سرای شهزاده کابل</p>
+      </div>
+      <div class="flex items-center gap-4 text-slate-400">
+        <span>۱ مثقال = ۴.۶۰۸ گرام</span>
+        <span>•</span>
+        <span>۱ بیرل = ۱۵۹ لیتر</span>
+        <span>•</span>
+        <span>۱ توله = ۱۱.۶۶ گرام</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Pure Standalone JavaScript Engine -->
+  <script>
+    let usdToAfnRate = 71.25;
+    let currency = 'AFN';
+    let lang = 'fa';
+    let isStreaming = true;
+    let tickCount = 0;
+    let selectedCommodityId = 'gold';
+    let selectedUnitKey = 'miscal_24k';
+    let activeTimeframe = '24H';
+
+    const UNITS = {
+      miscal_24k: { id: 'miscal_24k', nameFa: 'مثقال عیار ۲۴ (خالص)', nameEn: 'Miscal 24K', mult: 4.608 / 31.1034768, symbol: 'مثقال ۲۴' },
+      miscal_22k: { id: 'miscal_22k', nameFa: 'مثقال عیار ۲۲ (عربی)', nameEn: 'Miscal 22K', mult: (4.608 / 31.1034768) * (22/24), symbol: 'مثقال ۲۲' },
+      miscal_21k: { id: 'miscal_21k', nameFa: 'مثقال عیار ۲۱ (رایج)', nameEn: 'Miscal 21K', mult: (4.608 / 31.1034768) * (21/24), symbol: 'مثقال ۲۱' },
+      miscal_18k: { id: 'miscal_18k', nameFa: 'مثقال عیار ۱۸ (ایتالوی)', nameEn: 'Miscal 18K', mult: (4.608 / 31.1034768) * (18/24), symbol: 'مثقال ۱۸' },
+      gram_24k: { id: 'gram_24k', nameFa: '۱ گرام طلای ۲۴', nameEn: 'Gram 24K', mult: 1 / 31.1034768, symbol: '۱ گرام' },
+      tola: { id: 'tola', nameFa: 'توله (۱۱.۶۶ گرام)', nameEn: 'Tola', mult: 0.375, symbol: 'توله' },
+      troy_oz: { id: 'troy_oz', nameFa: 'اونس تروا جهانی', nameEn: 'Troy Oz', mult: 1.0, symbol: 'اونس' },
+      kg: { id: 'kg', nameFa: 'کیلوگرام (۱۰۰۰ گرام)', nameEn: 'Kilogram', mult: 1000 / 31.1034768, symbol: 'کیلو' },
+      barrel: { id: 'barrel', nameFa: 'بشکه نفت (۱۵۹ لیتر)', nameEn: 'Barrel (bbl)', mult: 1.0, symbol: 'بشکه' },
+      liter: { id: 'liter', nameFa: 'لیتر نفت (تانک تیل)', nameEn: 'Liter', mult: 1 / 158.9873, symbol: 'لیتر' },
+      gallon: { id: 'gallon', nameFa: 'گالن آمریکایی', nameEn: 'US Gallon', mult: 1 / 42, symbol: 'گالن' },
+      ton_metric: { id: 'ton_metric', nameFa: 'تن متری نفت خام', nameEn: 'Metric Ton', mult: 7.33, symbol: 'تن متری' },
+    };
+
+    let commodities = [
+      { id: 'gold', nameFa: 'طلای جهانی', nameEn: 'Gold Spot', symbol: 'XAU/USD', basePriceUSD: 2914.80, change24hUSD: 8.40, changePct: 0.29, units: ['miscal_24k', 'miscal_22k', 'miscal_21k', 'miscal_18k', 'gram_24k', 'tola', 'troy_oz', 'kg'], defaultUnit: 'miscal_24k', lastDir: 'up' },
+      { id: 'silver', nameFa: 'نقره جهانی', nameEn: 'Silver Spot', symbol: 'XAG/USD', basePriceUSD: 32.85, change24hUSD: 0.40, changePct: 1.23, units: ['miscal_24k', 'gram_24k', 'tola', 'troy_oz', 'kg'], defaultUnit: 'miscal_24k', lastDir: 'up' },
+      { id: 'brent_oil', nameFa: 'نفت برنت', nameEn: 'Brent Crude', symbol: 'BRENT', basePriceUSD: 74.85, change24hUSD: -0.35, changePct: -0.46, units: ['barrel', 'liter', 'gallon', 'ton_metric'], defaultUnit: 'barrel', lastDir: 'down' },
+      { id: 'wti_oil', nameFa: 'نفت وست تگزاس', nameEn: 'WTI Crude', symbol: 'WTI', basePriceUSD: 71.30, change24hUSD: -0.30, changePct: -0.42, units: ['barrel', 'liter', 'gallon', 'ton_metric'], defaultUnit: 'barrel', lastDir: 'up' },
+      { id: 'platinum', nameFa: 'پلاتین', nameEn: 'Platinum', symbol: 'XPT/USD', basePriceUSD: 986.50, change24hUSD: 8.30, changePct: 0.85, units: ['gram_24k', 'miscal_24k', 'troy_oz', 'kg'], defaultUnit: 'gram_24k', lastDir: 'up' },
+      { id: 'palladium', nameFa: 'پالادیوم', nameEn: 'Palladium', symbol: 'XPD/USD', basePriceUSD: 965.20, change24hUSD: 10.20, changePct: 1.07, units: ['gram_24k', 'miscal_24k', 'troy_oz', 'kg'], defaultUnit: 'gram_24k', lastDir: 'down' },
+      { id: 'rhodium', nameFa: 'رودیوم (نایاب)', nameEn: 'Rhodium', symbol: 'XRH/USD', basePriceUSD: 4790.00, change24hUSD: 40.00, changePct: 0.84, units: ['gram_24k', 'miscal_24k', 'troy_oz'], defaultUnit: 'gram_24k', lastDir: 'up' },
+    ];
+
+    function formatNumber(num, curr) {
+      if (curr === 'AFN') {
+        const dec = num < 10 ? 2 : num < 200 ? 1 : 0;
+        return num.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + ' ؋';
+      }
+      const dec = num < 10 ? 3 : 2;
+      return '$' + num.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    }
+
+    function getConvertedPrice(comm, unitKey, curr) {
+      const u = UNITS[unitKey] || UNITS.miscal_24k;
+      const usdPrice = comm.basePriceUSD * u.mult;
+      return curr === 'AFN' ? usdPrice * usdToAfnRate : usdPrice;
+    }
+
+    function getHistoricalCurve(commId, currentPriceUSD, tf) {
+      let count = tf === '1H' ? 60 : tf === '24H' ? 48 : tf === '1M' ? 30 : tf === '1Y' ? 52 : 12;
+      let points = [];
+      let base = currentPriceUSD;
+      for (let i = count - 1; i >= 0; i--) {
+        let progress = (count - i) / count;
+        let wave = Math.sin(progress * Math.PI * 3) * (currentPriceUSD * 0.015);
+        let noise = (Math.random() - 0.5) * (currentPriceUSD * 0.005);
+        let p = i === 0 ? currentPriceUSD : Math.max(1, base + wave + noise);
+        points.push(p);
+      }
+      return points;
+    }
+
+    function renderChart() {
+      const comm = commodities.find(c => c.id === selectedCommodityId) || commodities[0];
+      const u = UNITS[selectedUnitKey] || UNITS[comm.defaultUnit];
+      
+      document.getElementById('chart-asset-title').innerText = lang === 'fa' ? comm.nameFa : comm.nameEn;
+      document.getElementById('chart-asset-symbol').innerText = comm.symbol;
+      document.getElementById('chart-unit-badge').innerText = lang === 'fa' ? u.nameFa : u.nameEn;
+      document.getElementById('chart-unit-desc').innerText = u.nameFa;
+
+      const rawCurve = getHistoricalCurve(comm.id, comm.basePriceUSD, activeTimeframe);
+      const converted = rawCurve.map(p => p * u.mult * (currency === 'AFN' ? usdToAfnRate : 1.0));
+
+      const min = Math.min(...converted);
+      const max = Math.max(...converted);
+      const current = converted[converted.length - 1];
+      const first = converted[0];
+      const change = current - first;
+      const changePct = (change / first) * 100;
+      const avg = converted.reduce((a, b) => a + b, 0) / converted.length;
+
+      document.getElementById('chart-active-price').innerText = formatNumber(current, currency);
+      const changeElem = document.getElementById('chart-active-change');
+      changeElem.innerText = (change >= 0 ? '+' : '') + formatNumber(change, currency) + ' (' + (change >= 0 ? '+' : '') + changePct.toFixed(2) + '%)';
+      changeElem.className = 'text-sm font-semibold font-mono ' + (change >= 0 ? 'text-emerald-400' : 'text-rose-400');
+
+      document.getElementById('stat-max').innerText = formatNumber(max, currency);
+      document.getElementById('stat-min').innerText = formatNumber(min, currency);
+      document.getElementById('stat-avg').innerText = formatNumber(avg, currency);
+      const statChange = document.getElementById('stat-change');
+      statChange.innerText = (change >= 0 ? '+' : '') + changePct.toFixed(2) + '%';
+      statChange.className = 'font-mono font-bold text-sm ' + (change >= 0 ? 'text-emerald-400' : 'text-rose-400');
+
+      const svg = document.getElementById('main-chart-svg');
+      const w = 800, h = 320, pTop = 20, pBottom = 35, pLeft = 70, pRight = 20;
+      const innerW = w - pLeft - pRight;
+      const innerH = h - pTop - pBottom;
+      const range = Math.max(0.0001, max - min);
+
+      const getY = val => pTop + innerH - ((val - min) / range) * innerH;
+      const getX = idx => pLeft + (idx / (converted.length - 1)) * innerW;
+
+      let pathD = '';
+      converted.forEach((val, idx) => {
+        const x = getX(idx), y = getY(val);
+        pathD += idx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+      });
+      const areaD = `${pathD} L ${getX(converted.length - 1)} ${pTop + innerH} L ${pLeft} ${pTop + innerH} Z`;
+
+      const strokeColor = change >= 0 ? '#10b981' : '#f43f5e';
+      const gradId = 'chart-grad';
+
+      svg.innerHTML = `
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        ${[0, 0.25, 0.5, 0.75, 1].map(r => {
+          const y = pTop + innerH * r;
+          const val = max - r * range;
+          return `
+            <line x1="${pLeft}" y1="${y}" x2="${w - pRight}" y2="${y}" stroke="#334155" stroke-width="1" stroke-dasharray="4 4" stroke-opacity="0.4"/>
+            <text x="${pLeft - 8}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="10" font-family="monospace">${formatNumber(val, currency)}</text>
+          `;
+        }).join('')}
+        <path d="${areaD}" fill="url(#${gradId})"/>
+        <path d="${pathD}" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      `;
+    }
+
+    function renderUnitButtons() {
+      const comm = commodities.find(c => c.id === selectedCommodityId) || commodities[0];
+      const container = document.getElementById('chart-units-container');
+      container.innerHTML = comm.units.map(uKey => {
+        const u = UNITS[uKey];
+        const isCurrent = selectedUnitKey === uKey;
+        return `
+          <button onclick="setChartUnit('${uKey}')" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all border ${
+            isCurrent ? 'bg-amber-500/20 border-amber-500 text-amber-300 font-bold' : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+          }">
+            ${u.nameFa}
+          </button>
+        `;
+      }).join('');
+    }
+
+    window.setChartUnit = function(uKey) {
+      selectedUnitKey = uKey;
+      renderUnitButtons();
+      renderChart();
+    };
+
+    function renderSaraiShahzada() {
+      const gold = commodities.find(c => c.id === 'gold');
+      const brent = commodities.find(c => c.id === 'brent_oil');
+      const silver = commodities.find(c => c.id === 'silver');
+
+      const items = [
+        { title: 'طلای ۲۴ عیار (شمش خالص)', unit: 'فی مثقال (۴.۶۰۸ گرام)', comm: gold, uKey: 'miscal_24k', badge: 'شمش خالص' },
+        { title: 'طلای ۲۱ عیار (زیورات کابل)', unit: 'فی مثقال (۴.۶۰۸ گرام)', comm: gold, uKey: 'miscal_21k', badge: 'پرمعامله‌ترین' },
+        { title: 'طلای ۲۲ عیار (خلیجی)', unit: 'فی مثقال (۴.۶۰۸ گرام)', comm: gold, uKey: 'miscal_22k', badge: 'زیورات خلیجی' },
+        { title: 'طلای ۱۸ عیار (ایتالوی)', unit: 'فی مثقال (۴.۶۰۸ گرام)', comm: gold, uKey: 'miscal_18k', badge: 'تراش ایتالوی' },
+        { title: 'طلای ۲۴ عیار (یک گرام)', unit: 'فی ۱ گرام خالص', comm: gold, uKey: 'gram_24k', badge: 'معیار متری' },
+        { title: 'طلای ناب (یک توله)', unit: 'فی ۱ توله (۱۱.۶۶g)', comm: gold, uKey: 'tola', badge: 'توله شمش' },
+        { title: 'نقره خالص (فی مثقال)', unit: 'فی مثقال (۴.۶۰۸g)', comm: silver, uKey: 'miscal_24k', badge: 'نقره' },
+        { title: 'نفت خام معادل (فی لیتر)', unit: 'فی ۱ لیتر', comm: brent, uKey: 'liter', badge: 'سوخت افغانستان' },
+        { title: 'نفت برنت (فی بشکه)', unit: 'فی بشکه (۱۵۹ لیتر)', comm: brent, uKey: 'barrel', badge: 'نفت جهانی' },
+      ];
+
+      const grid = document.getElementById('sarai-shahzada-grid');
+      grid.innerHTML = items.map(item => {
+        const afn = getConvertedPrice(item.comm, item.uKey, 'AFN');
+        const usd = getConvertedPrice(item.comm, item.uKey, 'USD');
+        const isUp = item.comm.lastDir === 'up';
+        return `
+          <div onclick="selectCommodity('${item.comm.id}', '${item.uKey}')" class="bg-slate-950/80 hover:border-amber-500/60 border border-slate-800 rounded-xl p-3.5 transition-all cursor-pointer">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="font-bold text-white text-sm">${item.title}</h4>
+                <span class="text-xs text-slate-400">${item.unit}</span>
+              </div>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">${item.badge}</span>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-900 flex justify-between items-baseline">
+              <div>
+                <div class="text-lg font-mono font-extrabold ${isUp ? 'text-emerald-400' : 'text-rose-400'}">${formatNumber(afn, 'AFN')}</div>
+                <div class="text-xs font-mono text-slate-400">${formatNumber(usd, 'USD')} معادل</div>
+              </div>
+              <div class="text-xs font-mono ${item.comm.changePct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                ${item.comm.changePct >= 0 ? '+' : ''}${item.comm.changePct.toFixed(2)}%
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTickerRibbon() {
+      const items = [
+        { id: 'gold', u: 'miscal_24k', label: 'طلای ۲۴ مثقال' },
+        { id: 'gold', u: 'miscal_21k', label: 'طلای ۲۱ مثقال' },
+        { id: 'silver', u: 'miscal_24k', label: 'نقره مثقال' },
+        { id: 'brent_oil', u: 'barrel', label: 'نفت برنت بشکه' },
+        { id: 'brent_oil', u: 'liter', label: 'نفت فی لیتر' },
+        { id: 'wti_oil', u: 'barrel', label: 'نفت تگزاس بشکه' },
+        { id: 'platinum', u: 'gram_24k', label: 'پلاتین ۱ گرام' },
+      ];
+
+      const cont = document.getElementById('ticker-ribbon-container');
+      cont.innerHTML = `
+        <div class="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/30 rounded text-[11px] font-bold text-amber-400">
+          <span>● نوسان زنده</span>
+        </div>
+      ` + items.map(item => {
+        const comm = commodities.find(c => c.id === item.id);
+        const price = getConvertedPrice(comm, item.u, currency);
+        const isUp = comm.lastDir === 'up';
+        return `
+          <div onclick="selectCommodity('${comm.id}', '${item.u}')" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-800 bg-slate-950/80 cursor-pointer hover:border-slate-700 text-xs">
+            <span class="font-semibold text-slate-300">${item.label}:</span>
+            <span class="font-mono font-bold ${isUp ? 'text-emerald-400' : 'text-rose-400'}">${formatNumber(price, currency)}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCommoditiesDeck() {
+      const deck = document.getElementById('commodities-deck');
+      deck.innerHTML = commodities.map(c => {
+        const u = UNITS[c.defaultUnit];
+        const price = getConvertedPrice(c, c.defaultUnit, currency);
+        const isUp = c.lastDir === 'up';
+        return `
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition-all">
+            <div>
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="font-bold text-white text-base">${lang === 'fa' ? c.nameFa : c.nameEn}</h4>
+                  <span class="text-xs text-slate-400 font-mono">${c.symbol}</span>
+                </div>
+                <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-amber-300">${u.nameFa}</span>
+              </div>
+              <div class="mt-3 p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+                <span class="text-[11px] text-slate-400 block">${u.symbol}</span>
+                <div class="text-xl font-mono font-extrabold ${isUp ? 'text-emerald-400' : 'text-rose-400'} mt-1">
+                  ${formatNumber(price, currency)}
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center">
+              <span class="text-xs text-slate-400 font-mono ${c.changePct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                ۲۴ ساعته: ${c.changePct >= 0 ? '+' : ''}${c.changePct.toFixed(2)}%
+              </span>
+              <button onclick="selectCommodity('${c.id}', '${c.defaultUnit}')" class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-colors">
+                مشاهده نمودار
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.selectCommodity = function(id, uKey) {
+      selectedCommodityId = id;
+      const c = commodities.find(item => item.id === id);
+      if (uKey && c.units.includes(uKey)) {
+        selectedUnitKey = uKey;
+      } else {
+        selectedUnitKey = c.defaultUnit;
+      }
+      document.getElementById('chart-commodity-select').value = id;
+      renderUnitButtons();
+      renderChart();
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    };
+
+    function initCalculator() {
+      const commSel = document.getElementById('calc-comm-select');
+      const unitSel = document.getElementById('calc-unit-select');
+
+      commSel.innerHTML = commodities.map(c => `<option value="${c.id}">${c.nameFa} (${c.symbol})</option>`).join('');
+
+      function updateCalcUnits() {
+        const c = commodities.find(item => item.id === commSel.value);
+        unitSel.innerHTML = c.units.map(uKey => `<option value="${uKey}">${UNITS[uKey].nameFa}</option>`).join('');
+        runCalc();
+      }
+
+      function runCalc() {
+        const c = commodities.find(item => item.id === commSel.value);
+        const u = UNITS[unitSel.value] || UNITS[c.defaultUnit];
+        const qty = parseFloat(document.getElementById('calc-amount-input').value) || 0;
+        const usd = qty * c.basePriceUSD * u.mult;
+        const afn = usd * usdToAfnRate;
+        document.getElementById('calc-result-afn').innerText = formatNumber(afn, 'AFN');
+        document.getElementById('calc-result-usd').innerText = formatNumber(usd, 'USD');
+      }
+
+      commSel.addEventListener('change', updateCalcUnits);
+      unitSel.addEventListener('change', runCalc);
+      document.getElementById('calc-amount-input').addEventListener('input', runCalc);
+
+      updateCalcUnits();
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      const kabul = new Date(utc + 3600000 * 4.5);
+      document.getElementById('kabul-clock').innerText = kabul.toLocaleTimeString('en-US', { hour12: false });
+    }
+
+    setInterval(() => {
+      updateClock();
+      if (!isStreaming) return;
+
+      tickCount++;
+      document.getElementById('tick-counter').innerText = tickCount;
+
+      commodities.forEach(c => {
+        const delta = (Math.random() - 0.495) * 0.0004 * c.basePriceUSD;
+        const oldPrice = c.basePriceUSD;
+        c.basePriceUSD = Number((c.basePriceUSD + delta).toFixed(2));
+        c.lastDir = c.basePriceUSD > oldPrice ? 'up' : 'down';
+      });
+
+      renderSaraiShahzada();
+      renderTickerRibbon();
+      renderChart();
+    }, 1000);
+
+    document.getElementById('chart-commodity-select').addEventListener('change', e => {
+      window.selectCommodity(e.target.value);
+    });
+
+    document.getElementById('timeframe-buttons').addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      activeTimeframe = btn.dataset.tf;
+      document.querySelectorAll('#timeframe-buttons button').forEach(b => {
+        b.className = 'px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all';
+      });
+      btn.className = 'px-3 py-1 rounded-lg font-bold bg-amber-500 text-slate-950 shadow-sm transition-all';
+      renderChart();
+    });
+
+    document.getElementById('curr-afn-btn').addEventListener('click', () => {
+      currency = 'AFN';
+      document.getElementById('curr-afn-btn').className = 'px-3 py-1.5 rounded-md font-bold bg-amber-500 text-slate-950 shadow-sm transition-all';
+      document.getElementById('curr-usd-btn').className = 'px-3 py-1.5 rounded-md font-medium text-slate-400 hover:text-white transition-all';
+      renderAll();
+    });
+    document.getElementById('curr-usd-btn').addEventListener('click', () => {
+      currency = 'USD';
+      document.getElementById('curr-usd-btn').className = 'px-3 py-1.5 rounded-md font-bold bg-amber-500 text-slate-950 shadow-sm transition-all';
+      document.getElementById('curr-afn-btn').className = 'px-3 py-1.5 rounded-md font-medium text-slate-400 hover:text-white transition-all';
+      renderAll();
+    });
+
+    document.getElementById('toggle-stream-btn').addEventListener('click', () => {
+      isStreaming = !isStreaming;
+      document.getElementById('toggle-stream-text').innerText = isStreaming ? 'توقف نوسان زنده' : 'ادامه نوسان زنده';
+      document.getElementById('live-status-text').innerText = isStreaming ? 'پخش زنده بازار' : 'متوقف شد';
+      const dot = document.getElementById('live-indicator-dot');
+      dot.className = isStreaming ? 'w-2 h-2 rounded-full bg-emerald-400 animate-ping' : 'w-2 h-2 rounded-full bg-amber-400';
+    });
+
+    function renderAll() {
+      renderUnitButtons();
+      renderChart();
+      renderSaraiShahzada();
+      renderTickerRibbon();
+      renderCommoditiesDeck();
+    }
+
+    renderAll();
+    initCalculator();
+    updateClock();
+  </script>
+</body>
+</html>
